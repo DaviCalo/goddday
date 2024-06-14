@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
@@ -47,14 +48,14 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             TextTheme {
-                MyApp(this)
+                MyApp()
             }
         }
     }
 }
 
 @Composable
-fun MyApp(context: Activity) {
+fun MyApp() {
     var texto by remember {
         mutableStateOf("")
     }
@@ -71,7 +72,7 @@ fun MyApp(context: Activity) {
 
         topBar()
 
-        MyCustomText(name = texto, context)
+        MyCustomText(name = texto)
 
         OutlinedTextField(
             leadingIcon = { //trailingIcon = icon in the right
@@ -112,24 +113,23 @@ fun topBar(){
 }
 
 @Composable
-fun MyCustomText(name: String, context: Activity) {
+fun MyCustomText(name: String) {
     val pattern = remember {
         Regex("[a-zA-z\\s]*")}
-
+    val context = LocalContext.current
     var nome = ""
     if(name.matches(pattern)){
         nome = name
     } else {
         Toast.makeText(context, "Não use Números", Toast.LENGTH_SHORT).show()
-        nome = ""
     }
     Text(text = "Meu nome é $nome", Modifier.padding(8.dp))
 }
 
-//@Preview
-//@Composable
-//fun PreviewMyApp() {
-//    TextTheme {
-//        MyApp(null)
-//    }
-//}
+@Preview(showSystemUi = true)
+@Composable
+fun PreviewMyApp() {
+    TextTheme {
+        MyApp()
+    }
+}
